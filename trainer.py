@@ -1,5 +1,5 @@
 import torch
-from model import BigramLanguageModel
+from model import GPTLanguageModel
 from data import load_data, split_data, get_batch
 
 # Details of Hyperparameters
@@ -8,7 +8,7 @@ batch_size = 16
 block_size = 8
 max_iters = 100
 eval_interval = 500
-learning_rate = 0.01
+learning_rate = 0.001
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 eval_iters = 50
 n_embd = 32
@@ -21,8 +21,8 @@ torch.manual_seed(1337)
 data, decode, vocab_size = load_data('input.txt')
 train_data, val_data = split_data(data)
 
-# Initializing Bigram Model
-model = BigramLanguageModel(vocab_size, n_embd, block_size, n_head, n_layer, dropout)
+# Initializing Model
+model = GPTLanguageModel(vocab_size, n_embd, block_size, n_head, n_layer, dropout)
 model = model.to(device)
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
