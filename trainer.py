@@ -38,3 +38,21 @@ def estimate_loss():
             losses[split][k] = loss.item()
     model.train()
     return {k: v.mean() for k, v in losses.items()}
+
+# Training Loop
+for iter in range(max_iters):
+    if iter % eval_interval == 0:
+        losses = estimate_loss()
+        print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
+
+    xb, yb = get_batch(train_data, block_size, batch_size)
+    xb, yb = xb.to(device), yb.to(device)
+
+    logits, loss = model(xb, yb)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+# Decoding Text
+context = torch.zeros((1, 1), dtype=torch.long, device=device)
+print(decode(model.generate(context, max_new_tokens=500, block_size=block_size)[0].tolist()))
