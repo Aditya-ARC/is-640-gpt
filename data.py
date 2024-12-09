@@ -1,6 +1,5 @@
 import torch
 
-#Read data from a file
 class Data:
     def __init__(self, file_path, device='cpu', block_size=256):
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -11,7 +10,6 @@ class Data:
         self.stoi = { ch:i for i,ch in enumerate(self.chars) }
         self.itos = { i:ch for i,ch in enumerate(self.chars) }
 
-        # Encoding
         self.encode = lambda s: [self.stoi[c] for c in s]
         self.decode = lambda l: ''.join([self.itos[i] for i in l])
 
