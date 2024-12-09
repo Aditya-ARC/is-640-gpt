@@ -32,15 +32,15 @@ class Trainer:
                 losses = self.estimate_loss()
                 print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
-            # sample a batch of data
+            # Get the sample
             xb, yb = self.data.get_batch('train', self.batch_size, self.train_data, self.val_data)
 
-            # evaluate the loss
+            # Loss evaluation
             _, loss = self.model(xb, yb)
             self.optimizer.zero_grad(set_to_none=True)
             loss.backward()
             self.optimizer.step()
 
-        # final loss value after training
+        # Post training - get the final loss
         final_losses = self.estimate_loss()
         print(f"Final train loss {final_losses['train']:.4f}, val loss {final_losses['val']:.4f}")

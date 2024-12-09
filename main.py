@@ -10,12 +10,12 @@ if __name__ == "__main__":
     max_iters = 100    # For better performance increasing number of training iterations
     eval_interval = 500
     eval_iters = 200
-    learning_rate = 1e-3    # learning rate increased for loss reduction
-    n_embd = 32    # embedding dimension increased for better performance
+    learning_rate = 1e-3  
+    device = 'cuda' if torch.cuda.is_available() else 'cpu' 
+    n_embd = 32    
     n_head = 4
     n_layer = 3
     dropout = 0.2
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
     # Data Loading
     data_obj = Data(file_path='input.txt', device=device, block_size=block_size)

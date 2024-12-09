@@ -3,7 +3,6 @@ import torch.nn as nn
 from torch.nn import functional as F
 
 class Head(nn.Module):
-    """ one head of self-attention """
     def __init__(self, n_embd, head_size, block_size, dropout=0.2):
         super().__init__()
         self.key = nn.Linear(n_embd, head_size, bias=False)
@@ -26,7 +25,6 @@ class Head(nn.Module):
         return out
 
 class MultiHeadAttention(nn.Module):
-    """ multiple heads of self-attention in parallel """
     def __init__(self, n_embd, n_head, block_size, dropout=0.2):
         super().__init__()
         head_size = n_embd // n_head
@@ -40,7 +38,6 @@ class MultiHeadAttention(nn.Module):
         return out
 
 class FeedForward(nn.Module):
-    """ a simple linear layer followed by a non-linearity """
     def __init__(self, n_embd, dropout=0.2):
         super().__init__()
         self.net = nn.Sequential(
@@ -54,7 +51,6 @@ class FeedForward(nn.Module):
         return self.net(x)
 
 class Block(nn.Module):
-    """ Transformer block: communication followed by computation """
     def __init__(self, n_embd, n_head, block_size, dropout=0.2):
         super().__init__()
         self.sa = MultiHeadAttention(n_embd, n_head, block_size, dropout=dropout)
@@ -68,7 +64,6 @@ class Block(nn.Module):
         return x
 
 class GPTLanguageModel(nn.Module):
-
     def __init__(self, vocab_size, n_embd=384, n_head=6, n_layer=6, block_size=256, dropout=0.2, device='cpu'):
         super().__init__()
         self.block_size = block_size
@@ -92,13 +87,12 @@ class GPTLanguageModel(nn.Module):
 
     def forward(self, idx, targets=None):
         B, T = idx.shape
-        # idx and targets are both (B,T) tensor of integers
-        tok_emb = self.token_embedding_table(idx) # (B,T,C)
-        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) # (T,C)
-        x = tok_emb + pos_emb # (B,T,C)
-        x = self.blocks(x) # (B,T,C)
-        x = self.ln_f(x) # (B,T,C)
-        logits = self.lm_head(x) # (B,T,vocab_size)
+        tok_emb = self.token_embedding_table(idx) 
+        pos_emb = self.position_embedding_table(torch.arange(T, device=idx.device)) 
+        x = tok_emb + pos_emb 
+        x = self.blocks(x) 
+        x = self.ln_f(x) 
+        logits = self.lm_head(x) 
 
         if targets is None:
             loss = None
@@ -115,8 +109,8 @@ class GPTLanguageModel(nn.Module):
         for _ in range(max_new_tokens):
             idx_cond = idx[:, -self.block_size:]
             logits, _ = self(idx_cond)
-            logits = logits[:, -1, :] # (B,C)
-            probs = F.softmax(logits, dim=-1) # (B,C)
-            idx_next = torch.multinomial(probs, num_samples=1) # (B,1)
-            idx = torch.cat((idx, idx_next), dim=1) # (B,T+1)
+            logits = logits[:, -1, :] 
+            probs = F.softmax(logits, dim=-1) 
+            idx_next = torch.multinomial(probs, num_samples=1) 
+            idx = torch.cat((idx, idx_next), dim=1) 
         return idx
