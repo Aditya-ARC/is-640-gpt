@@ -1,5 +1,7 @@
 import torch
 
+#defining class Trainer
+#adam optimizer
 class Trainer:
     def __init__(self, model, data_obj, max_iters=5000, eval_interval=500, eval_iters=200, batch_size=64, learning_rate=3e-4):
         self.model = model
@@ -32,15 +34,17 @@ class Trainer:
                 losses = self.estimate_loss()
                 print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
-            # Get the sample
+            #sample
             xb, yb = self.data.get_batch('train', self.batch_size, self.train_data, self.val_data)
 
             # Loss evaluation
+            # use of optimizer
             _, loss = self.model(xb, yb)
             self.optimizer.zero_grad(set_to_none=True)
             loss.backward()
             self.optimizer.step()
 
-        # Post training - get the final loss
+        # Post training
+        # final loss
         final_losses = self.estimate_loss()
         print(f"Final train loss {final_losses['train']:.4f}, val loss {final_losses['val']:.4f}")
