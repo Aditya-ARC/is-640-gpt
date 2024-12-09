@@ -1,4 +1,4 @@
-# is-640-gpt 
+## is-640-gpt 
 Let's build GPT
 
 "data.py”: read data from a specified file. It should have at least one “Data” class to provide data-related functions such as “decode” and “encode” etc.
