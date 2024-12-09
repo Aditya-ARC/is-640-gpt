@@ -3,6 +3,7 @@ from model import BigramLanguageModel
 from data import load_data, split_data, get_batch
 
 # Details of Hyperparameters
+
 batch_size = 16
 block_size = 8
 max_iters = 100
